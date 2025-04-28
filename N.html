@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Translate to Amharic</title>
+</head>
+<body>
+
+<h1>Translate to Amharic</h1>
+
+<textarea id="textToTranslate" rows="4" cols="50" placeholder="Enter text here..."></textarea><br><br>
+<button onclick="translateText()">Translate</button>
+
+<h2>Translation Result:</h2>
+<p id="translationResult"></p>
+
+<script>
+    function translateText() {
+        const text = document.getElementById('textToTranslate').value;
+        const resultElement = document.getElementById('translationResult');
+
+        if (text.trim() === '') {
+            resultElement.innerText = 'Please enter some text.';
+            return;
+        }
+
+        fetch('https://libretranslate.de/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                q: text,
+                source: 'en',
+                target: 'am', // Amharic language code
+                format: 'text'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            resultElement.innerText = data.translatedText;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultElement.innerText = 'Translation failed.';
+        });
+    }
+</script>
+
+</body>
+</html>
